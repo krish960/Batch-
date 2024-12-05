@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo A2z</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container my-5">
+    <h1 class="text-center mb-4">Batch Management</h1>
+    <form id="batchForm" class="mb-4">
+      <div class="row">
+        <div class="mb-3 col-md-6">
+          <label for="batchDate" class="form-label">Batch Date</label>
+          <input type="date" id="batchDate" class="form-control" required>
+        </div>
+
+        <div class="mb-3 col-md-6">
+          <label for="batchTime" class="form-label">Batch Time</label>
+          <input type="time" id="batchTime" class="form-control" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="mb-3 col-md-6">
+          <label for="course" class="form-label">Course</label>
+          <select id="course" class="form-select" required>
+            <option value="" disabled selected>Select a course</option>
+            <option value="HTML">HTML</option>
+            <option value="CSS">CSS</option>
+            <option value="JS">JS</option>
+            <option value="Jquery">Jquery</option>
+
+          </select>
+        </div>
+
+        <div class="mb-3 col-md-6">
+          <label for="duration" class="form-label">Batch Duration</label>
+          <input type="number" id="duration" class="form-control" placeholder="Duration" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="mb-3 col-md-6">
+          <label for="courseImg" class="form-label">Course Image</label>
+          <input type="file" id="courseImg" class="form-control" accept="image/*" required>
+        </div>
+      </div>
+
+      <button type="submit" id="joinButton" class="btn btn-primary w-100">Join Batch</button>
+    </form>
+
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Batch Date</th>
+          <th>Batch Time</th>
+          <th>Course</th>
+          <th>Duration</th>
+          <th>Image</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="batchTableBody">
+        <!-- Rows will be dynamically added here -->
+      </tbody>
+    </table>
+  </div>
+  <script type="text/javascript">
+    const form = document.getElementById('batchForm');
+const tableBody = document.getElementById('batchTableBody');
+
+form.addEventListener('submit', function (e) {
+ e.preventDefault();
+
+ const batchDate = document.getElementById('batchDate').value;
+ const batchTime = document.getElementById('batchTime').value;
+ const course = document.getElementById('course').value;
+ const duration = document.getElementById('duration').value;
+ const courseImg = document.getElementById('courseImg').files[0];
+
+ if (!batchDate || !batchTime || !course || !duration || !courseImg) {
+  alert("Please fill out all fields.");
+  return;
+ }
+
+ const reader = new FileReader();
+ reader.onload = function () {
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+            <td>${batchDate}</td>
+            <td>${batchTime}</td>
+            <td>${course}</td>
+            <td>${duration}</td>
+            <td><img src="${reader.result}" alt="Course Image" width="50"></td>
+            <td>
+                <button class="edit">Edit</button>
+                <button class="remove">Remove</button>
+            </td>
+        `;
+
+  tableBody.appendChild(newRow);
+
+  // Clear form
+  form.reset();
+
+  // Add event listeners to buttons
+  newRow.querySelector('.edit').addEventListener('click', function () {
+   editRow(newRow);
+  });
+
+  newRow.querySelector('.remove').addEventListener('click', function () {
+   newRow.remove();
+  });
+ };
+
+ reader.readAsDataURL(courseImg);
+});
+
+function editRow(row) {
+ const cells = row.querySelectorAll('td');
+ document.getElementById('batchDate').value = cells[0].textContent;
+ document.getElementById('batchTime').value = cells[1].textContent;
+ document.getElementById('course').value = cells[2].textContent;
+ document.getElementById('duration').value = cells[3].textContent;
+
+ row.remove();
+}
+
+  </script>
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
